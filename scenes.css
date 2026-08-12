@@ -1,0 +1,640 @@
+/* =========================================================================
+   Design tokens
+   ========================================================================= */
+:root {
+  --color-cream: #fbf3ea;
+  --color-paper: #fffbf5;
+  --color-ink: #4a3b36;
+  --color-ink-soft: #7a655c;
+
+  --color-blush: #f3b8c4;
+  --color-pink: #e8879a;
+  --color-pink-dark: #c96a80;
+
+  --color-red: #c1443c;
+  --color-red-dark: #8c2f3a;
+  --color-red-soft: #d97a6f;
+
+  --color-gold: #d4a373;
+
+  --font-heading: 'Playfair Display', serif;
+  --font-hand: 'Caveat', cursive;
+  --font-body: 'Poppins', sans-serif;
+}
+
+/* =========================================================================
+   Base & app shell
+   ========================================================================= */
+.app-root {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(243, 184, 196, 0.35) 0%, transparent 55%),
+    radial-gradient(circle at 82% 78%, rgba(212, 163, 115, 0.25) 0%, transparent 55%),
+    var(--color-cream);
+}
+
+.scene {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.25rem;
+  position: relative;
+  text-align: center;
+}
+
+/* -------------------------------------------------------------------------
+   Scene transitions
+   ------------------------------------------------------------------------- */
+.scene-stage--enter {
+  animation: scene-enter 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+.scene-stage--exit {
+  animation: scene-exit 0.55s ease both;
+}
+
+@keyframes scene-enter {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes scene-exit {
+  to {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.98);
+  }
+}
+
+/* =========================================================================
+   Page 1 — Envelope letter
+   ========================================================================= */
+.scene-letter {
+  overflow: hidden;
+}
+
+.scene-letter::before,
+.scene-letter::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.scene-letter::before {
+  width: 280px;
+  height: 280px;
+  background: var(--color-blush);
+  opacity: 0.45;
+  top: 6%;
+  left: -70px;
+}
+
+.scene-letter::after {
+  width: 220px;
+  height: 220px;
+  background: var(--color-gold);
+  opacity: 0.3;
+  bottom: 8%;
+  right: -60px;
+}
+
+.letter-title {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: clamp(2rem, 6vw, 3.1rem);
+  color: var(--color-ink);
+  margin-bottom: clamp(2rem, 6vw, 3rem);
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.envelope-button {
+  position: relative;
+  z-index: 1;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.envelope {
+  position: relative;
+  width: 210px;
+  height: 148px;
+  perspective: 600px;
+  animation: envelope-float 4.5s ease-in-out infinite;
+  filter: drop-shadow(0 20px 26px rgba(90, 45, 45, 0.2));
+}
+
+.envelope--opening {
+  animation: none;
+  transform: scale(0.94) translateY(-8px);
+  transition: transform 0.6s ease;
+}
+
+.envelope__back {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, #fff8f0 0%, #f2e2cd 100%);
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px rgba(74, 59, 54, 0.06);
+}
+
+.envelope__flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 62%;
+  background: linear-gradient(160deg, #f8ecdc, #ecd7ba);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 10px 10px 0 0;
+  z-index: 3;
+}
+
+.envelope--opening .envelope__flap {
+  transform: rotateX(-165deg);
+}
+
+.envelope__seal {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(160deg, #e08a94, #c9576a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff8f0;
+  font-size: 17px;
+  box-shadow: 0 4px 10px rgba(140, 47, 58, 0.35);
+  z-index: 4;
+  transition: all 0.4s ease;
+}
+
+.envelope--opening .envelope__seal {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.5);
+}
+
+@keyframes envelope-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.letter-subtitle {
+  position: relative;
+  z-index: 1;
+  font-style: italic;
+  color: var(--color-ink-soft);
+  margin-top: clamp(1.75rem, 5vw, 2.5rem);
+  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+}
+
+/* =========================================================================
+   Page 2 — Red message card
+   ========================================================================= */
+.message-card {
+  position: relative;
+  width: min(420px, 100%);
+  background: linear-gradient(155deg, var(--color-red-soft) 0%, var(--color-red) 55%, var(--color-red-dark) 100%);
+  border-radius: 24px 30px 26px 32px;
+  padding: clamp(1.75rem, 5vw, 2.5rem) clamp(1.5rem, 5vw, 2.25rem) clamp(2rem, 5vw, 2.5rem);
+  box-shadow: 0 24px 48px rgba(140, 47, 58, 0.35), 0 4px 12px rgba(140, 47, 58, 0.2);
+  transform: rotate(-1deg);
+  animation: card-float 6s ease-in-out infinite;
+  text-align: left;
+  color: #fdf1ea;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: repeating-linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.05) 0px,
+    rgba(255, 255, 255, 0.05) 2px,
+    transparent 2px,
+    transparent 10px
+  );
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+@keyframes card-float {
+  0%,
+  100% {
+    transform: rotate(-1deg) translateY(0);
+  }
+  50% {
+    transform: rotate(-1deg) translateY(-8px);
+  }
+}
+
+.card-line {
+  font-size: 0.95rem;
+  margin: 0 0 0.35rem;
+  color: #fbe4de;
+}
+
+.card-line--to {
+  margin-bottom: 1.5rem;
+}
+
+.card-label {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.15rem;
+  margin: 0 0 0.6rem;
+  color: #fff8f4;
+}
+
+.card-message {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin: 0;
+  color: #fdf1ea;
+}
+
+.card-button-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: clamp(1.75rem, 6vw, 2.5rem);
+}
+
+.arrow-button {
+  position: relative;
+  border: none;
+  cursor: pointer;
+  width: 64px;
+  height: 52px;
+  border-radius: 26px;
+  background: linear-gradient(160deg, #f7c8d3, var(--color-pink));
+  color: #6b1f2e;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 20px rgba(201, 106, 128, 0.45);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.arrow-button:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 14px 26px rgba(201, 106, 128, 0.6);
+}
+
+.arrow-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 6px 14px rgba(201, 106, 128, 0.4);
+}
+
+/* =========================================================================
+   Page 3 — Bunting, photo, sparkles, letter
+   ========================================================================= */
+.scene-photo {
+  justify-content: flex-start;
+  padding-top: 0;
+  gap: 0;
+}
+
+/* --- Bunting flags -------------------------------------------------- */
+.bunting {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  height: 76px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 22px 6% 0;
+  margin-bottom: 1.5rem;
+}
+
+.bunting__string {
+  position: absolute;
+  top: 20px;
+  left: 4%;
+  right: 4%;
+  height: 2px;
+  background: rgba(74, 59, 54, 0.25);
+}
+
+.bunting__flag {
+  display: block;
+  width: 30px;
+  height: 40px;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  transform: translateY(var(--sag, 0px)) rotate(-4deg);
+  animation: flag-swing 3.5s ease-in-out infinite;
+  box-shadow: 0 4px 6px rgba(74, 59, 54, 0.12);
+}
+
+@keyframes flag-swing {
+  0%,
+  100% {
+    transform: translateY(var(--sag, 0px)) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(var(--sag, 0px)) rotate(4deg);
+  }
+}
+
+/* --- Open paper letter (continues the page 1 envelope) ---------------- */
+.open-letter-wrap {
+  position: relative;
+  width: min(640px, 92vw);
+  margin: 0 auto clamp(3rem, 8vw, 4rem);
+  align-self: center;
+}
+
+.open-letter {
+  position: relative;
+  z-index: 1;
+  background: var(--color-paper);
+  /* Slightly curved paper edges using asymmetric radii */
+  border-radius: 4px 6px 5px 7px / 6px 5px 7px 4px;
+  padding: clamp(2rem, 6vw, 3rem) clamp(1.5rem, 5vw, 2.75rem);
+  /* Subtle paper texture via layered soft gradients */
+  background-image:
+    repeating-linear-gradient(
+      137deg,
+      rgba(212, 163, 115, 0.04) 0px,
+      rgba(212, 163, 115, 0.04) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    radial-gradient(circle at 30% 20%, rgba(243, 184, 196, 0.06), transparent 60%),
+    radial-gradient(circle at 75% 80%, rgba(212, 163, 115, 0.05), transparent 55%);
+  box-shadow:
+    0 26px 50px rgba(60, 40, 30, 0.18),
+    0 6px 14px rgba(60, 40, 30, 0.1),
+    inset 0 0 0 1px rgba(74, 59, 54, 0.04);
+  text-align: left;
+  transform: rotate(-0.6deg);
+  animation: letter-unfold 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both,
+             letter-float 6s ease-in-out 0.7s infinite;
+  /* Never overflow horizontally on mobile */
+  overflow: hidden;
+}
+
+/* Faint horizontal fold creases top and bottom, like a folded note */
+.open-letter__crease {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(74, 59, 54, 0.1) 20%,
+    rgba(74, 59, 54, 0.1) 80%,
+    transparent
+  );
+}
+
+.open-letter__crease--top {
+  top: 14px;
+}
+
+.open-letter__crease--bottom {
+  bottom: 14px;
+}
+
+@keyframes letter-unfold {
+  from {
+    opacity: 0;
+    transform: rotate(-0.6deg) scaleY(0.3) translateY(-30px);
+    transform-origin: top center;
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-0.6deg) scaleY(1) translateY(0);
+  }
+}
+
+@keyframes letter-float {
+  0%,
+  100% {
+    transform: rotate(-0.6deg) translateY(0);
+  }
+  50% {
+    transform: rotate(-0.6deg) translateY(-7px);
+  }
+}
+
+.open-letter__text {
+  font-family: var(--font-hand);
+  font-size: clamp(1.2rem, 2.6vw, 1.55rem);
+  line-height: 1.55;
+  color: var(--color-ink);
+  white-space: pre-line;
+  margin: 0;
+  /* Gradual fade-in as the paper unfolds */
+  animation: text-soft-in 1s ease 0.35s both;
+}
+
+@keyframes text-soft-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* --- Decorative elements around the letter ----------------------------- */
+.letter-decor {
+  position: absolute;
+  inset: -36px -28px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.letter-decor__item {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  opacity: 0;
+  animation-fill-mode: both;
+}
+
+.letter-decor__item--heart {
+  animation-name: heart-float;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.letter-decor__item--sparkle {
+  animation-name: sparkle-float;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.letter-decor__item--paper {
+  width: 14px;
+  height: 10px;
+  border-radius: 1px;
+  background: currentColor;
+  opacity: 0;
+  animation-name: paper-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes heart-float {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.7);
+  }
+  20% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.55;
+    transform: translateY(calc(-1 * var(--drift))) scale(1);
+  }
+  80% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(calc(-2 * var(--drift))) scale(0.8);
+  }
+}
+
+@keyframes sparkle-float {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.6) rotate(0deg);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.1) rotate(20deg);
+  }
+}
+
+@keyframes paper-drift {
+  0% {
+    opacity: 0;
+    transform: translateY(0) rotate(0deg);
+  }
+  30% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(var(--drift)) rotate(30deg);
+  }
+}
+
+/* =========================================================================
+   Music toggle
+   ========================================================================= */
+.music-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 50;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 106, 128, 0.25);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 16px rgba(60, 40, 30, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-pink-dark);
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+}
+
+.music-toggle:hover {
+  transform: scale(1.08);
+}
+
+.music-toggle--playing {
+  color: var(--color-red-dark);
+  animation: music-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes music-pulse {
+  0%,
+  100% {
+    box-shadow: 0 6px 16px rgba(60, 40, 30, 0.18);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(216, 100, 120, 0.45);
+  }
+}
+
+/* =========================================================================
+   Responsive tweaks
+   ========================================================================= */
+@media (max-width: 480px) {
+  .envelope {
+    width: 180px;
+    height: 126px;
+  }
+
+  .bunting__flag {
+    width: 24px;
+    height: 32px;
+  }
+
+  .open-letter-wrap {
+    width: min(640px, 92vw);
+  }
+}
+
+/* =========================================================================
+   Reduced motion
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
